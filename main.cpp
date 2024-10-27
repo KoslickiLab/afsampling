@@ -1,7 +1,7 @@
 # include <iostream>
 # include <vector>
 
-# include "Sketch.h"
+# include "sketch.h"
 
 int main() {
     // Create an instance of the Sketch class
