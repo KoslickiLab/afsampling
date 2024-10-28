@@ -10,21 +10,18 @@
 #define SEED 0
 
 int main() {
-    // Create an instance of the Sketch class
-    FracMinHashSketch sketch(100);
+    FracMinHashSketch fmh_sketch(100);
+    AffirmativeSketch aff_sketch;
 
-    // Create 1000 random 64 bit uintegers, and add them to the sketch
     for (int i = 0; i < 1000; i++) {
         uint64_t hash_value = mmh3(&i, sizeof(i), SEED);
-        sketch.add(hash_value);
+        fmh_sketch.add(hash_value);
+        aff_sketch.add(hash_value);
     }
 
-    // Get the vector
-    const std::vector<hash_t>& vec = sketch.get();
-
-    // Print the number of elements in the vector
-    std::cout << "Number of elements in the sketch: " << vec.size() << std::endl;
-
+    // Print the number of elements in the sketches
+    std::cout << "Number of elements in the FMH sketch: " << fmh_sketch.size() << std::endl;
+    std::cout << "Number of elements in the Affirmative sketch: " << aff_sketch.size() << std::endl;
 
     return 0;
 }

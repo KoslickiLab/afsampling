@@ -16,6 +16,8 @@ public:
 
     void add(hash_t value);
 
+    size_t size() const;
+
 private:
     std::map<hash_t, int> data_;  // Map to store data of type hash_t
 };

@@ -24,3 +24,9 @@ void Sketch::set(const std::vector<hash_t>& vec) {
 void Sketch::add(hash_t value) {
     data_[value]++;
 }
+
+
+// Returns the size of the vector
+size_t Sketch::size() const {
+    return data_.size();
+}
