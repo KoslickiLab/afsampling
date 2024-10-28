@@ -18,6 +18,8 @@ void FracMinHashSketch::add(hash_t value) {
 
 // Setter implementation
 void FracMinHashSketch::set(const std::vector<hash_t>& vec) {
+    // clear the map
+    data_.clear();
     for (hash_t value : vec) {
         // if hash value is smaller than threshold, add it to the vector
         if (value < threshold_) {

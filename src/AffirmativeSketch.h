@@ -11,7 +11,10 @@ typedef unsigned long long int hash_t;
 // AffirmativeSketch class will be derived from Sketch class
 class AffirmativeSketch : public Sketch {
 public:
-    AffirmativeSketch() = default;  // Default constructor
+    AffirmativeSketch(size_t k) : k(k) {
+        threshold1_ = 0;
+        threshold2_ = 0;
+    }
 
     std::vector<hash_t> get() const;
 
@@ -22,6 +25,7 @@ public:
 private:
     hash_t threshold1_ = 0;  
     hash_t threshold2_ = 0;
+    size_t k;
 };
 
 #endif // AFFIRMATIVE_SKETCH_H

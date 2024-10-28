@@ -18,7 +18,7 @@ public:
 
     size_t size() const;
 
-private:
+protected:
     std::map<hash_t, int> data_;  // Map to store data of type hash_t
 };
 

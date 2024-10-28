@@ -10,8 +10,8 @@
 #define SEED 0
 
 int main() {
-    FracMinHashSketch fmh_sketch(100);
-    AffirmativeSketch aff_sketch;
+    FracMinHashSketch fmh_sketch(10);
+    AffirmativeSketch aff_sketch(10);
 
     for (int i = 0; i < 1000; i++) {
         uint64_t hash_value = mmh3(&i, sizeof(i), SEED);
