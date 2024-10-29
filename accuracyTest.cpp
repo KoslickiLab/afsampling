@@ -146,7 +146,7 @@ int main(int argc, char* argv[]) {
         double aff_jaccard = aff_sketch_a.jaccard(aff_sketch_b);
         double fmh_jaccard = fmh_sketch_a.jaccard(fmh_sketch_b);
 
-        cout << true_jaccard << "\t" << aff_jaccard << "\t" << fmh_jaccard << endl;
+        cout << size_a << "\t" << size_b << "\t" << true_jaccard << "\t" << aff_jaccard << "\t" << fmh_jaccard << endl;
 
     }
 
