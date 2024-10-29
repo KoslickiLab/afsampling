@@ -1,8 +1,8 @@
 CXX = g++
 CXXFLAGS = -std=c++11
-SRC = main.cpp src/AffirmativeSketch.cpp src/Sketch.cpp src/MurMurHash3.cpp src/FracMinHashSketch.cpp
+SRC = basicTest.cpp src/AffirmativeSketch.cpp src/Sketch.cpp src/MurMurHash3.cpp src/FracMinHashSketch.cpp
 OBJ = $(SRC:.cpp=.o)
-TARGET = sketchTester
+TARGET = basicTest 
 
 all: $(TARGET)
 
