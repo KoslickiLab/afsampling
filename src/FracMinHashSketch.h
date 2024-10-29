@@ -4,6 +4,7 @@
 #include <vector>
 #include <map>
 #include <cstdint>
+#include <cmath>
 
 #include "Sketch.h"
 
@@ -14,7 +15,7 @@ class FracMinHashSketch : public Sketch {
 public:
     FracMinHashSketch(size_t scaled) : scaled_(scaled) {
         uint64_t largest_value = 0xFFFFFFFFFFFFFFFF;
-        threshold_ = std::round( (long double)largest_value / (long double)scaled_ );
+        threshold_ = round( (long double)largest_value / (long double)scaled_ );
     }
 
     std::vector<hash_t> get() const;
