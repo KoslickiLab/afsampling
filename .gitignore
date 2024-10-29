@@ -1,2 +1,4 @@
 .vscode/settings.json
 src/.DS_Store
+*.o
+bin/*
