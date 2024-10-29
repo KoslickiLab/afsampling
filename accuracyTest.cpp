@@ -64,7 +64,7 @@ void parse_arguments(int argc, char* argv[]) {
         .scan<'i', int>()
         .default_value(10000);
 
-    program.add_argument("-h", "--size_high")
+    program.add_argument("-H", "--size_high")
         .help("High value of the size of the original sets")
         .scan<'i', int>()
         .default_value(1000000000);
@@ -91,6 +91,14 @@ void parse_arguments(int argc, char* argv[]) {
 int main(int argc, char* argv[]) {
     
     parse_arguments(argc, argv);
+
+    // show arguments from the global struct
+    cout << "Scaled: " << arguments.scaled << endl;
+    cout << "k: " << arguments.k << endl;
+    cout << "Number of trials: " << arguments.num_trials << endl;
+    cout << "Size low: " << arguments.size_low << endl;
+    cout << "Size high: " << arguments.size_high << endl;
+    cout << "Max size: " << arguments.max_size << endl;
 
     for (int i = 0; i < arguments.num_trials; i++) {
 
