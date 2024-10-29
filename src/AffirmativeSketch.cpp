@@ -38,7 +38,7 @@ void AffirmativeSketch::add(hash_t value) {
     }
 }
 
-// Setter implementation
+// Setter implementation, not expected to be used
 void AffirmativeSketch::set(const std::vector<hash_t>& vec) {
     // clear the map
     data_.clear();
