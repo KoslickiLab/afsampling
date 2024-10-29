@@ -1,21 +1,51 @@
 CXX = g++
-CXXFLAGS = -std=c++11
-SRC = src/AffirmativeSketch.cpp src/Sketch.cpp src/MurMurHash3.cpp src/FracMinHashSketch.cpp
-OBJ = $(SRC:.cpp=.o)
-TARGET1 = basicTest
-TARGET2 = sketchSizeTest
+CXXFLAGS = -std=c++11 -Wall -O3
 
-all: $(TARGET1) $(TARGET2)
+# Directories
+SRC_DIR = src
+MMH3_DIR = mmh3
+BIN_DIR = bin
 
-$(TARGET1): basicTest.o $(OBJ)
+# Source files
+SRC_FILES = $(SRC_DIR)/Sketch.cpp $(SRC_DIR)/FracMinHashSketch.cpp $(SRC_DIR)/AffirmativeSketch.cpp $(MMH3_DIR)/MurMurHash3.cpp
+
+# Object files
+OBJ_FILES = $(SRC_FILES:.cpp=.o)
+
+# Target programs
+TARGETS = $(BIN_DIR)/basicTest $(BIN_DIR)/sketchSizeTest
+
+# Default rule
+all: $(TARGETS)
+
+# Rule to build basicTest
+$(BIN_DIR)/basicTest: $(OBJ_FILES) $(BIN_DIR)/basicTest.o | $(BIN_DIR)
 	$(CXX) $(CXXFLAGS) -o $@ $^
 
-$(TARGET2): sketchSizeTest.o $(OBJ)
+# Rule to build sketchSizeTest
+$(BIN_DIR)/sketchSizeTest: $(OBJ_FILES) $(BIN_DIR)/sketchSizeTest.o | $(BIN_DIR)
 	$(CXX) $(CXXFLAGS) -o $@ $^
 
-%.o: %.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+# Create the bin directory if it doesn't exist
+$(BIN_DIR):
+	mkdir -p $(BIN_DIR)
 
+# Rule to build object files
+$(OBJ_FILES): %.o: %.cpp | $(BIN_DIR)
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
+# Rule to build object files for test programs
+$(BIN_DIR)/basicTest.o: basicTest.cpp | $(BIN_DIR)
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
+$(BIN_DIR)/sketchSizeTest.o: sketchSizeTest.cpp | $(BIN_DIR)
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
+# Clean up
 clean:
-	rm -f $(TARGET1) $(TARGET2) $(OBJ) *.o
+	rm -f $(OBJ_FILES) $(BIN_DIR)/*.o $(TARGETS)
 
+clean-object:
+	rm -f $(OBJ_FILES)
+
+.PHONY: all clean

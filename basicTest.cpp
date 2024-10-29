@@ -4,7 +4,7 @@
 # include <string>
 
 # include "src/AffirmativeSketch.h"
-# include "src/MurMurHash3.h"
+# include "mmh3/MurMurHash3.h"
 # include "src/FracMinHashSketch.h"
 
 #define SEED 0
