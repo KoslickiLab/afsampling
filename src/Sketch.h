@@ -4,6 +4,7 @@
 #include <vector>
 #include <map>
 #include <set>
+#include <cstddef>
 
 typedef unsigned long long int hash_t;
 
