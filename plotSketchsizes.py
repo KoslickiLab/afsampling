@@ -21,9 +21,17 @@ df.loc[2] = [1000000,1004.2,26.5548,1021,30.4335]
 df.loc[3] = [10000000,9968.3,73.369,1247,42.1829]
 df.loc[4] = [100000000,97035.5,302.213,1486.3,24.0626]
 
+
+k = 100
+
+plt.plot(np.log10(df['size']), np.log10(df['size']/1000), label='FMH Expected Size', alpha=0.5, marker='o')
+plt.plot(np.log10(df['size']), np.log10( k*np.log(df['size']/k)+k ), label='AFF Expected Size', alpha=0.5, marker='o')
+
+
 # plot fmh_avg against size, x axis in logarithmic
-plt.plot(np.log10(df['size']), np.log10(df['fmh_size_avg']), label='FMH Sketch Size', alpha=0.5, marker='o')    
 plt.plot(np.log10(df['size']), np.log10(df['aff_size_avg']), label='AFF Sketch Size', alpha=0.5, marker='o')
+plt.plot(np.log10(df['size']), np.log10(df['fmh_size_avg']), label='FMH Sketch Size', alpha=0.5, marker='o')
+
 
 plt.xlabel('log10 of Size')
 plt.ylabel('log10 of Sketch Size')
