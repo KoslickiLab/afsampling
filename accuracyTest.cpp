@@ -100,34 +100,33 @@ int main(int argc, char* argv[]) {
     cout << "Size high: " << arguments.size_high << endl;
     cout << "Max size: " << arguments.max_size << endl;
 
+    int size_a = arguments.size_high/2;
+    vector<int> set_a;
+    for (int i = 0; i < size_a; i++) {
+        set_a.push_back( rand() % arguments.max_size );
+    }
+
+    // create the sketches for set a
+    AffirmativeSketch aff_sketch_a(arguments.k);
+    FracMinHashSketch fmh_sketch_a(arguments.scaled);
+    Sketch no_subsampling_sketch_a;
+
+    // add the elements to the sketches
+    for (int element : set_a) {
+        auto hash_value = mmh3(&element, sizeof(element), 0);
+        aff_sketch_a.add(hash_value);
+        fmh_sketch_a.add(hash_value);
+        no_subsampling_sketch_a.add(hash_value);
+    }
+
+
     for (int i = 0; i < arguments.num_trials; i++) {
 
-        int size_a = arguments.size_high/2;
         int size_b = rand() % (arguments.size_high - arguments.size_low) + arguments.size_low;
-
-        // create the sets
-        vector<int> set_a;
         vector<int> set_b;
-
-        for (int i = 0; i < size_a; i++) {
-            set_a.push_back( rand() % arguments.max_size );
-        }
-
+        
         for (int i = 0; i < size_b; i++) {
             set_b.push_back( rand() % arguments.max_size );
-        }
-
-        // create the sketches for set a
-        AffirmativeSketch aff_sketch_a(arguments.k);
-        FracMinHashSketch fmh_sketch_a(arguments.scaled);
-        Sketch no_subsampling_sketch_a;
-
-        // add the elements to the sketches
-        for (int element : set_a) {
-            auto hash_value = mmh3(&element, sizeof(element), 0);
-            aff_sketch_a.add(hash_value);
-            fmh_sketch_a.add(hash_value);
-            no_subsampling_sketch_a.add(hash_value);
         }
 
         // create the sketches for set b
@@ -143,14 +142,11 @@ int main(int argc, char* argv[]) {
             no_subsampling_sketch_b.add(hash_value);
         }
 
-        cout << "Created the sketches..." << endl;
-
         double true_jaccard = no_subsampling_sketch_a.jaccard(no_subsampling_sketch_b);
         double aff_jaccard = aff_sketch_a.jaccard(aff_sketch_b);
         double fmh_jaccard = fmh_sketch_a.jaccard(fmh_sketch_b);
 
         cout << true_jaccard << "\t" << aff_jaccard << "\t" << fmh_jaccard << endl;
-
 
     }
 
