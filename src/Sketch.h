@@ -5,6 +5,7 @@
 #include <map>
 #include <set>
 #include <cstddef>
+#include <cstdint>
 
 typedef unsigned long long int hash_t;
 

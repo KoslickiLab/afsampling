@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <map>
+#include <cstdint>
 
 #include "Sketch.h"
 
