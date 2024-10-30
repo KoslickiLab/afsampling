@@ -47,3 +47,59 @@ void AffirmativeSketch::set(const std::vector<hash_t>& vec) {
     }
 }
 
+
+// Jaccard implementation
+double AffirmativeSketch::jaccard(const Sketch& other) const {
+    
+    std::vector<hash_t> this_sketch = get();
+    std::vector<hash_t> other_sketch = other.get();
+
+    // get the smallest common hash
+    size_t i = 0, j = 0;
+    bool found = false;
+    hash_t smallest_common_hash = -1;
+    while (i < this_sketch.size() && j < other_sketch.size()) {
+        if (this_sketch[i] == other_sketch[j]) {
+            found = true;
+            smallest_common_hash = this_sketch[i];
+            break;
+        } else if (this_sketch[i] < other_sketch[j]) {
+            i++;
+        } else {
+            j++;
+        }
+    }
+
+    // if no common hash, return 0
+    if (!found) {
+        return 0;
+    }
+
+    std::set<hash_t> union_set;
+    for (hash_t value : this_sketch) {
+        if (value < smallest_common_hash) {
+            continue;
+        }
+        union_set.insert(value);
+    }
+    for (hash_t value : other_sketch) {
+        if (value < smallest_common_hash) {
+            continue;
+        }
+        union_set.insert(value);
+    }
+
+    std::set<hash_t> intersection_set;
+    for (hash_t value : this_sketch) {
+        if (value < smallest_common_hash) {
+            continue;
+        }
+        if (std::find(other_sketch.begin(), other_sketch.end(), value) != other_sketch.end()) {
+            intersection_set.insert(value);
+        }
+    }
+
+    double jaccard = static_cast<double>(intersection_set.size()) / union_set.size();
+    return jaccard;
+
+}

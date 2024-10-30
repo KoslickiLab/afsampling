@@ -22,6 +22,8 @@ public:
 
     void add(hash_t value);
 
+    double jaccard(const Sketch& other) const;
+
 private:
     hash_t threshold1_ = 0;  
     hash_t threshold2_ = 0;
