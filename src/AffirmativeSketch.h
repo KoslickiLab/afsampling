@@ -3,6 +3,13 @@
 
 #include <vector>
 #include <map>
+#include <algorithm>
+#include <set>
+#include <cstddef>
+#include <cstdint>
+#include <iostream>
+#include <cmath>
+#include <limits>
 
 #include "Sketch.h"
 
