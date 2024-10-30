@@ -48,3 +48,11 @@ $$
 $$
 
 After that, if we estimate Jaccard/containment, we should get unbiased estimates. Let us implement these filterings and re-generate the images.
+
+The accuracy test for Jaccard now looks like this:
+
+![SVG Image](plotting/accuracyTestOutputWithFiltering.svg)
+
+Better! The same result using many $k$-values look like this:
+
+![SVG Image](plotting/accuracyTest2OutputWithFiltering.svg)

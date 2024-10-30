@@ -1,8 +1,11 @@
 from matplotlib import pyplot as plt
 import pandas as pd
+import sys
+
+filename = sys.argv[1]
 
 # Read the data from the CSV file
-data = pd.read_csv('accuracyTest2Output', sep='\t', header=None)
+data = pd.read_csv(filename, sep='\t', header=None)
 data.columns = ['size_a', 'size_b', 'jaccard_true', 'jaccard_aff_k_300', 'jaccard_aff_k_400', 'jaccard_aff_k_500', 'jaccard_aff_k_600', 'jaccard_aff_k_700', 'jaccard_fmh']
 
 # plot jaccards against true
@@ -21,4 +24,4 @@ plt.plot(data['jaccard_true'], data['jaccard_true'], alpha=0.8, color='black')
 
 plt.legend()
 
-plt.savefig('plotAccuracyTest2Output.svg')
+plt.savefig(f'{filename}.svg')
