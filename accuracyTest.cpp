@@ -92,14 +92,6 @@ int main(int argc, char* argv[]) {
     
     parse_arguments(argc, argv);
 
-    // show arguments from the global struct
-    cout << "Scaled: " << arguments.scaled << endl;
-    cout << "k: " << arguments.k << endl;
-    cout << "Number of trials: " << arguments.num_trials << endl;
-    cout << "Size low: " << arguments.size_low << endl;
-    cout << "Size high: " << arguments.size_high << endl;
-    cout << "Max size: " << arguments.max_size << endl;
-
     int size_a = arguments.size_high/2;
     vector<int> set_a;
     for (int i = 0; i < size_a; i++) {
