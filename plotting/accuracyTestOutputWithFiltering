@@ -1,9 +1,3 @@
-Scaled: 1000
-k: 100
-Number of trials: 200
-Size low: 10000
-Size high: 1900000
-Max size: 2000000
 size_a	size_b	fmh_sketch_size_a	fmh_sketch_size_b	aff_sketch_size_a	aff_sketch_size_b	true_jaccard	aff_jaccard	fmh_jaccard
 950000	1686086	728	1135	978	1056	0.293937	0.287071	0.287491
 950000	359511	728	274	978	828	0.128621	0.1264	0.123318
