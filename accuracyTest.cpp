@@ -119,6 +119,7 @@ int main(int argc, char* argv[]) {
         no_subsampling_sketch_a.add(hash_value);
     }
 
+    cout << "size_a\tsize_b\tfmh_sketch_size_a\tfmh_sketch_size_b\taff_sketch_size_a\taff_sketch_size_b\ttrue_jaccard\taff_jaccard\tfmh_jaccard" << endl;
 
     for (int i = 0; i < arguments.num_trials; i++) {
 
@@ -146,7 +147,12 @@ int main(int argc, char* argv[]) {
         double aff_jaccard = aff_sketch_a.jaccard(aff_sketch_b);
         double fmh_jaccard = fmh_sketch_a.jaccard(fmh_sketch_b);
 
-        cout << size_a << "\t" << size_b << "\t" << true_jaccard << "\t" << aff_jaccard << "\t" << fmh_jaccard << endl;
+        auto fmh_sketch_size_a = fmh_sketch_a.size();
+        auto fmh_sketch_size_b = fmh_sketch_b.size();
+        auto aff_sketch_size_a = aff_sketch_a.size();
+        auto aff_sketch_size_b = aff_sketch_b.size();
+
+        cout << size_a << "\t" << size_b << "\t" << fmh_sketch_size_a << "\t" << fmh_sketch_size_b << "\t" << aff_sketch_size_a << "\t" << aff_sketch_size_b << "\t" << true_jaccard << "\t" << aff_jaccard << "\t" << fmh_jaccard << endl;
 
     }
 
