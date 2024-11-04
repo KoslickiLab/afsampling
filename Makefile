@@ -7,7 +7,7 @@ MMH3_DIR = mmh3
 BIN_DIR = bin
 
 # Source files
-SRC_FILES = $(SRC_DIR)/Sketch.cpp $(SRC_DIR)/FracMinHashSketch.cpp $(SRC_DIR)/AffirmativeSketch.cpp $(MMH3_DIR)/MurMurHash3.cpp
+SRC_FILES = $(SRC_DIR)/Sketch.cpp $(SRC_DIR)/FracMinHashSketch.cpp $(SRC_DIR)/AffirmativeSketch.cpp $(MMH3_DIR)/MurMurHash3.cpp $(SRC_DIR)/alphaAffirmativeSketch.cpp
 
 # Object files
 OBJ_FILES = $(SRC_FILES:.cpp=.o)
