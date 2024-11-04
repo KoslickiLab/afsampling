@@ -1,5 +1,5 @@
-#ifndef AFFIRMATIVE_SKETCH_H
-#define AFFIRMATIVE_SKETCH_H
+#ifndef ALPHA_AFFIRMATIVE_SKETCH_H
+#define ALPHA_AFFIRMATIVE_SKETCH_H
 
 #include <vector>
 #include <map>
@@ -37,4 +37,4 @@ private:
     double alpha;
 };
 
-#endif // AFFIRMATIVE_SKETCH_H
+#endif // ALPHA_AFFIRMATIVE_SKETCH_H
