@@ -1,13 +1,13 @@
 # include "alphaAffirmativeSketch.h"
 
 // Getter implementation
-std::vector<hash_t> alphaAffirmativeSketch::get() const {
+std::vector<hash_t> AlphaAffirmativeSketch::get() const {
     // call base class get method
     return Sketch::get();
 }
 
 // Adds a single element to the vector
-void alphaAffirmativeSketch::add(hash_t value) {
+void AlphaAffirmativeSketch::add(hash_t value) {
     // if value in sketch, do nothing
     if (data_.find(value) != data_.end()) {
         return;
@@ -49,7 +49,7 @@ void alphaAffirmativeSketch::add(hash_t value) {
 }
 
 // Setter implementation, not expected to be used
-void alphaAffirmativeSketch::set(const std::vector<hash_t>& vec) {
+void AlphaAffirmativeSketch::set(const std::vector<hash_t>& vec) {
     // clear the map
     data_.clear();
     for (hash_t value : vec) {
@@ -59,7 +59,7 @@ void alphaAffirmativeSketch::set(const std::vector<hash_t>& vec) {
 
 
 // Jaccard implementation
-double alphaAffirmativeSketch::jaccard(const Sketch& other) const {
+double AlphaAffirmativeSketch::jaccard(const Sketch& other) const {
     
     std::vector<hash_t> this_sketch = get();
     std::vector<hash_t> other_sketch = other.get();

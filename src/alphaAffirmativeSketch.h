@@ -16,9 +16,9 @@
 typedef unsigned long long int hash_t;
 
 // AffirmativeSketch class will be derived from Sketch class
-class alphaAffirmativeSketch : public Sketch {
+class AlphaAffirmativeSketch : public Sketch {
 public:
-    alphaAffirmativeSketch(double alpha) : alpha(alpha) {
+    AlphaAffirmativeSketch(double alpha) : alpha(alpha) {
         threshold1_ = 0;
         threshold2_ = 0;
     }
