@@ -2,6 +2,17 @@
 # include <vector>
 # include <cstdlib>
 # include <string>
+# include <cmath>
+# include <chrono>
+# include <random>
+# include <algorithm>
+# include <set>
+# include <map>
+# include <cassert>
+# include <tuple>
+# include <cmath>
+# include <stdexcept>
+# include <string>
 
 # include "src/AffirmativeSketch.h"
 # include "mmh3/MurMurHash3.h"
