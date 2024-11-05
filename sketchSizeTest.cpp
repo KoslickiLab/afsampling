@@ -83,6 +83,7 @@ int main(int argc, char* argv[]) {
     // show arguments from the global struct
     cout << "Scaled: " << arguments.scaled << endl;
     cout << "k: " << arguments.k << endl;
+    cout << "alpha: " << arguments.alpha << endl;
 
     vector<int> sizes = {10000, 100000, 1000000, 10000000, 100000000};
     int max_size = 1000000000;

@@ -13,37 +13,29 @@ void AlphaAffirmativeSketch::add(hash_t value) {
         return;
     }
 
-    // find the k using alpha, k = ceil(alpha * n), where n is the number of elements in the sketch
-    size_t n = data_.size();
-    size_t k = std::ceil(alpha * n);
-
-    // for the first k elements, add them to the sketch
-    if (data_.size() < k) {
+    // add the first element
+    if (data_.size() == 0) {
         Sketch::add(value);
-        // get the last element as the thresholds
-        auto it = data_.rbegin();
-        threshold1_ = it->first;
-        threshold2_ = it->first;
-    
+
     // ------ acceptance region1 ---- | ---- acceptance region2 ---- | ---- rejection region ----
     // -------------------------- threshold2 ------------------ threshold1 ----------------------
-
     // for the rest:
     } else {
+
+        size_t n = data_.size();
+        size_t k = static_cast<size_t>(std::floor(alpha * n));
+        auto it_reverse = data_.rbegin();
+        hash_t threshold1_ = it_reverse->first;
+        if (k != 0) std::advance(it_reverse, k-1);
+        hash_t threshold2_ = it_reverse->first;
+
         if (value > threshold1_) {
-            // if > threshold1, then do not add to sketch
             return;
         } else if (value > threshold2_) {
-            // if > threshold2, add to sketch and remove the first element
             Sketch::add(value);
             data_.erase(data_.rbegin()->first);
-            threshold1_ = data_.rbegin()->first;
         } else {
-            // if <= threshold2, add to sketch and update threshold2 = the kth smallest element
             Sketch::add(value);
-            auto it = data_.begin();
-            std::advance(it, k - 1);
-            threshold2_ = it->first;
         }
     }
 }

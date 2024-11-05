@@ -19,8 +19,6 @@ typedef unsigned long long int hash_t;
 class AlphaAffirmativeSketch : public Sketch {
 public:
     AlphaAffirmativeSketch(double alpha) : alpha(alpha) {
-        threshold1_ = 0;
-        threshold2_ = 0;
     }
 
     std::vector<hash_t> get() const;
@@ -32,8 +30,6 @@ public:
     double jaccard(const Sketch& other) const;
 
 private:
-    hash_t threshold1_ = 0;  
-    hash_t threshold2_ = 0;
     double alpha;
 };
 
