@@ -10,15 +10,16 @@
 #include <iostream>
 #include <cmath>
 #include <limits>
-
-#include "Sketch.h"
+#include <cassert>
+#include <set>
 
 typedef unsigned long long int hash_t;
 
 // AffirmativeSketch class will be derived from Sketch class
-class AlphaAffirmativeSketch : public Sketch {
+class AlphaAffirmativeSketch {
 public:
     AlphaAffirmativeSketch(double alpha) : alpha(alpha) {
+        assert(alpha >= 0 && alpha <= 1);
     }
 
     std::vector<hash_t> get() const;
@@ -27,10 +28,14 @@ public:
 
     void add(hash_t value);
 
-    double jaccard(const Sketch& other) const;
+    double jaccard(const AlphaAffirmativeSketch& other) const;
 
 private:
     double alpha;
+    std::multiset<hash_t> data_;
+    std::multiset<hash_t>::iterator quantile_it;
+    std::multiset<hash_t>::iterator largest_it;
+
 };
 
 #endif // ALPHA_AFFIRMATIVE_SKETCH_H

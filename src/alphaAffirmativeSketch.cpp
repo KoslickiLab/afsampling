@@ -2,8 +2,11 @@
 
 // Getter implementation
 std::vector<hash_t> AlphaAffirmativeSketch::get() const {
-    // call base class get method
-    return Sketch::get();
+    std::vector<hash_t> vec;
+    for (auto it = data_.begin(); it != data_.end(); it++) {
+        vec.push_back(*it);
+    }
+    return vec;
 }
 
 // Adds a single element to the vector
@@ -14,30 +17,36 @@ void AlphaAffirmativeSketch::add(hash_t value) {
         return;
     }
 
-    // add the first element
+    // if this is the first element
     if (data_.size() == 0) {
-        Sketch::add(value);
+        data_.insert(value);
+        quantile_it = data_.begin();
+        largest_it = data_.begin();
         return;
     }
 
     // ------ acceptance region1 ---- | ---- acceptance region2 ---- | ---- rejection region ----
     // -------------------------- threshold2 ------------------ threshold1 ----------------------
 
-    size_t n = data_.size();
-    size_t k = static_cast<size_t>(std::floor(alpha * n));
-    std::vector<hash_t> hash_values = get();
-    hash_t threshold1_ = hash_values[n-1];
-    hash_t threshold2_ = hash_values[n-k-1];
-    
-
+    hash_t threshold1_ = *largest_it;
+    hash_t threshold2_ = *quantile_it;
     if (value > threshold1_) {
         return;
     } else if (value > threshold2_) {
-        Sketch::add(value);
-        data_.erase(data_.rbegin()->first);
+        data_.insert(value);
+        data_.erase(*data_.rbegin());
+        largest_it = std::prev(data_.end());
     } else {
-        Sketch::add(value);
+        data_.insert(value);
+        size_t num_elements = data_.size();
+        size_t quantile_position = static_cast<size_t>(std::ceil(alpha * (num_elements-1));
+        auto current_quantile_position = std::distance(data_.begin(), quantile_it);
+
+        if (current_quantile_position > quantile_position) {
+            --quantile_it;
+        } 
     }
+
     
 }
 
@@ -52,7 +61,7 @@ void AlphaAffirmativeSketch::set(const std::vector<hash_t>& vec) {
 
 
 // Jaccard implementation
-double AlphaAffirmativeSketch::jaccard(const Sketch& other) const {
+double AlphaAffirmativeSketch::jaccard(const AlphaAffirmativeSketch& other) const {
     
     std::vector<hash_t> this_sketch = get();
     std::vector<hash_t> other_sketch = other.get();
