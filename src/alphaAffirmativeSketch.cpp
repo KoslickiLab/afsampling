@@ -39,7 +39,7 @@ void AlphaAffirmativeSketch::add(hash_t value) {
     } else {
         data_.insert(value);
         size_t num_elements = data_.size();
-        size_t quantile_position = static_cast<size_t>(std::ceil(alpha * (num_elements-1));
+        size_t quantile_position = static_cast<size_t>(std::ceil(alpha * (num_elements-1)));
         auto current_quantile_position = std::distance(data_.begin(), quantile_it);
 
         if (current_quantile_position > quantile_position) {
