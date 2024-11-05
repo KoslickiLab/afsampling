@@ -30,6 +30,8 @@ public:
 
     double jaccard(const AlphaAffirmativeSketch& other) const;
 
+    void print() const;
+
 private:
     double alpha;
     std::multiset<hash_t> data_;

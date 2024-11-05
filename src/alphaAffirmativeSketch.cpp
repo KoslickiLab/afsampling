@@ -118,3 +118,17 @@ double AlphaAffirmativeSketch::jaccard(const AlphaAffirmativeSketch& other) cons
     return jaccard;
 
 }
+
+
+
+// Print implementation
+void AlphaAffirmativeSketch::print() const {
+    for (auto it = data_.begin(); it != data_.end(); it++) {
+        std::cout << *it << " ";
+    }
+    std::cout << std::endl;
+
+    // print the quantile and largest
+    std::cout << "Quantile: " << *quantile_it << std::endl;
+    std::cout << "Largest: " << *largest_it << std::endl;
+}

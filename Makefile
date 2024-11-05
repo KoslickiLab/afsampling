@@ -13,7 +13,7 @@ SRC_FILES = $(SRC_DIR)/Sketch.cpp $(SRC_DIR)/FracMinHashSketch.cpp $(SRC_DIR)/Af
 OBJ_FILES = $(SRC_FILES:.cpp=.o)
 
 # Target programs
-TARGETS = $(BIN_DIR)/basicTest $(BIN_DIR)/sketchSizeTest $(BIN_DIR)/accuracyTest $(BIN_DIR)/accuracyTest2
+TARGETS = $(BIN_DIR)/basicTest $(BIN_DIR)/sketchSizeTest $(BIN_DIR)/accuracyTest $(BIN_DIR)/accuracyTest2 $(BIN_DIR)/alphaTest
 
 # Default rule
 all: $(TARGETS)
@@ -32,6 +32,10 @@ $(BIN_DIR)/accuracyTest: $(OBJ_FILES) $(BIN_DIR)/accuracyTest.o | $(BIN_DIR)
 
 # Rule to build accuracyTest2
 $(BIN_DIR)/accuracyTest2: $(OBJ_FILES) $(BIN_DIR)/accuracyTest2.o | $(BIN_DIR)
+	$(CXX) $(CXXFLAGS) -o $@ $^
+
+# Rule to build alphaTest
+$(BIN_DIR)/alphaTest: $(OBJ_FILES) $(BIN_DIR)/alphaTest.o | $(BIN_DIR)
 	$(CXX) $(CXXFLAGS) -o $@ $^
 
 # Create the bin directory if it doesn't exist
@@ -53,6 +57,9 @@ $(BIN_DIR)/accuracyTest.o: accuracyTest.cpp | $(BIN_DIR)
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 $(BIN_DIR)/accuracyTest2.o: accuracyTest2.cpp | $(BIN_DIR)
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
+$(BIN_DIR)/alphaTest.o: alphaAffirmativeTest.cpp | $(BIN_DIR)
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 # Clean up
