@@ -1,59 +1,32 @@
 #include "src/alphaAffirmativeSketch.h"
-#include "argparse/argparse.hpp"
 #include "mmh3/MurMurHash3.h"
 
 #include <iostream>
 
 using namespace std;
 
-struct Args {
-    double alpha;
-    int num_elements;
-};
-
-struct Args args;
-
-void parse_args(int argc, char **argv) {
-    argparse::ArgumentParser program("alphaAffirmativeTest");
-
-    program.add_argument("-a", "--alpha")
-        .help("alpha value for the sketch")
-        .required()
-        .action([](const string &value) { args.alpha = stod(value); });
-
-    program.add_argument("-n", "--num_elements")
-        .help("number of elements to add to the sketch")
-        .required()
-        .action([](const string &value) { args.num_elements = stoi(value); });
-
-    try {
-        program.parse_args(argc, argv);
-    } catch (const runtime_error &err) {
-        cout << err.what() << endl;
-        cout << program;
-        exit(0);
-    }
-}
-
 int main(int argc, char **argv) {
-    parse_args(argc, argv);
+    
+    vector<double> alpha_values = {0.1, 0.3, 0.5, 0.7};
+    vector<int> num_elements_vector = {10000, 100000, 1000000, 10000000, 100000000};
+    int num_runs = 5;
 
-    AlphaAffirmativeSketch sketch(args.alpha);
+    for (int num_elements : num_elements_vector) {
+        for (double alpha : alpha_values) {
+            for (int seed = 0; seed < num_runs; seed++) {
+                AlphaAffirmativeSketch sketch(alpha);
 
-    // print the arguments
-    cout << "alpha: " << args.alpha << endl;
-    cout << "num_elements: " << args.num_elements << endl;
+                for (int i = 0; i < num_elements; i++) {
+                    sketch.add(mmh3(&i, sizeof(i), seed));
+                }
 
-    // add elements to the sketch
-    for (int i = 0; i < args.num_elements; i++) {
-        auto hash_value = mmh3(&i, sizeof(i), 0);
-        sketch.add(hash_value);
-        //cout << "Added: " << hash_value << endl;
-        //sketch.print();
+                cout << "Number of elements: " << num_elements << endl;
+                cout << "Alpha: " << alpha << endl;
+                cout << "Seed: " << seed << endl;
+                cout << "Size of sketch: " << sketch.get().size() << endl;
+            }
+        }
     }
-
-    // show sketch size
-    cout << "Sketch size: " << sketch.get().size() << endl;
 
     return 0;
 }
