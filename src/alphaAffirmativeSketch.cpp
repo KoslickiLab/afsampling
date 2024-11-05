@@ -8,6 +8,7 @@ std::vector<hash_t> AlphaAffirmativeSketch::get() const {
 
 // Adds a single element to the vector
 void AlphaAffirmativeSketch::add(hash_t value) {
+    
     // if value in sketch, do nothing
     if (data_.find(value) != data_.end()) {
         return;
@@ -16,28 +17,28 @@ void AlphaAffirmativeSketch::add(hash_t value) {
     // add the first element
     if (data_.size() == 0) {
         Sketch::add(value);
+        return;
+    }
 
     // ------ acceptance region1 ---- | ---- acceptance region2 ---- | ---- rejection region ----
     // -------------------------- threshold2 ------------------ threshold1 ----------------------
-    // for the rest:
+
+    size_t n = data_.size();
+    size_t k = static_cast<size_t>(std::floor(alpha * n));
+    std::vector<hash_t> hash_values = get();
+    hash_t threshold1_ = hash_values[n-1];
+    hash_t threshold2_ = hash_values[n-k-1];
+    
+
+    if (value > threshold1_) {
+        return;
+    } else if (value > threshold2_) {
+        Sketch::add(value);
+        data_.erase(data_.rbegin()->first);
     } else {
-
-        size_t n = data_.size();
-        size_t k = static_cast<size_t>(std::floor(alpha * n));
-        auto it_reverse = data_.rbegin();
-        hash_t threshold1_ = it_reverse->first;
-        if (k != 0) std::advance(it_reverse, k-1);
-        hash_t threshold2_ = it_reverse->first;
-
-        if (value > threshold1_) {
-            return;
-        } else if (value > threshold2_) {
-            Sketch::add(value);
-            data_.erase(data_.rbegin()->first);
-        } else {
-            Sketch::add(value);
-        }
+        Sketch::add(value);
     }
+    
 }
 
 // Setter implementation, not expected to be used
