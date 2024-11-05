@@ -172,12 +172,22 @@ int main(int argc, char* argv[]) {
     cout << "k: " << arguments.k << endl;
     cout << "alpha: " << arguments.alpha << endl;
 
+    vector<double> fmh_sketch_sizes_mean;
+    vector<double> as_sketch_sizes_mean;
+    vector<double> aas_sketch_sizes_mean;
+
+    vector<double> fmh_sketch_sizes_std;
+    vector<double> as_sketch_sizes_std;
+    vector<double> aas_sketch_sizes_std;
+
+
     vector<int> sizes = {10000, 100000, 1000000, 10000000, 100000000};
     int max_size = 1000000000;
     auto fmh_start = chrono::high_resolution_clock::now();
     for (int size : sizes) {
         auto [mean, std] = get_mean_std_of_sketch_sizes_fmh(size);
-        cout << "FracMinHashSketch: " << size << " " << mean << " " << std << endl;
+        fmh_sketch_sizes_mean.push_back(mean);
+        fmh_sketch_sizes_std.push_back(std);
     }
     auto fmh_end = chrono::high_resolution_clock::now();
     auto fmh_duration = chrono::duration_cast<chrono::milliseconds>(fmh_end - fmh_start);
@@ -186,7 +196,8 @@ int main(int argc, char* argv[]) {
     auto as_start = chrono::high_resolution_clock::now();
     for (int size : sizes) {
         auto [mean, std] = get_mean_std_of_sketch_sizes_as(size);
-        cout << "AffirmativeSketch: " << size << " " << mean << " " << std << endl;
+        as_sketch_sizes_mean.push_back(mean);
+        as_sketch_sizes_std.push_back(std);
     }
     auto as_end = chrono::high_resolution_clock::now();
     auto as_duration = chrono::duration_cast<chrono::milliseconds>(as_end - as_start);
@@ -195,12 +206,17 @@ int main(int argc, char* argv[]) {
     auto aas_start = chrono::high_resolution_clock::now();
     for (int size : sizes) {
         auto [mean, std] = get_mean_std_of_sketch_sizes_aas(size);
-        cout << "AlphaAffirmativeSketch: " << size << " " << mean << " " << std << endl;
+        aas_sketch_sizes_mean.push_back(mean);
+        aas_sketch_sizes_std.push_back(std);
     }
     auto aas_end = chrono::high_resolution_clock::now();
     auto aas_duration = chrono::duration_cast<chrono::milliseconds>(aas_end - aas_start);
     cout << "AlphaAffirmativeSketch took " << aas_duration.count() << " milliseconds" << endl;
 
+    cout << "Size,FracMinHashSketchMean,FracMinHashSketchStd,AffirmativeSketchMean,AffirmativeSketchStd,AlphaAffirmativeSketchMean,AlphaAffirmativeSketchStd" << endl;
+    for (int i = 0; i < sizes.size(); i++) {
+        cout << sizes[i] << ',' << fmh_sketch_sizes_mean[i] << ',' << fmh_sketch_sizes_std[i] << ',' << as_sketch_sizes_mean[i] << ',' << as_sketch_sizes_std[i] << ',' << aas_sketch_sizes_mean[i] << ',' << aas_sketch_sizes_std[i] << endl;
+    }
 
     return 0;
 }
