@@ -13,10 +13,12 @@
 #include <cassert>
 #include <set>
 
+#include "Sketch.h"
+
 typedef unsigned long long int hash_t;
 
 // AffirmativeSketch class will be derived from Sketch class
-class AlphaAffirmativeSketch {
+class AlphaAffirmativeSketch : public Sketch {
 public:
     AlphaAffirmativeSketch(double alpha) : alpha(alpha) {
         assert(alpha >= 0 && alpha <= 1);
