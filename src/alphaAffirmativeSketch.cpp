@@ -2,42 +2,52 @@
 
 // Getter implementation
 std::vector<hash_t> AlphaAffirmativeSketch::get() const {
-    // call base class get method
-    return Sketch::get();
+    std::vector<hash_t> vec;
+    for (auto it = data_.begin(); it != data_.end(); it++) {
+        vec.push_back(*it);
+    }
+    return vec;
 }
 
 // Adds a single element to the vector
 void AlphaAffirmativeSketch::add(hash_t value) {
+    
     // if value in sketch, do nothing
     if (data_.find(value) != data_.end()) {
         return;
     }
 
-    // add the first element
+    // if this is the first element
     if (data_.size() == 0) {
-        Sketch::add(value);
+        data_.insert(value);
+        quantile_it = data_.begin();
+        largest_it = data_.begin();
+        return;
+    }
 
     // ------ acceptance region1 ---- | ---- acceptance region2 ---- | ---- rejection region ----
     // -------------------------- threshold2 ------------------ threshold1 ----------------------
-    // for the rest:
+
+    hash_t threshold1_ = *largest_it;
+    hash_t threshold2_ = *quantile_it;
+    if (value > threshold1_) {
+        return;
+    } else if (value > threshold2_) {
+        data_.insert(value);
+        data_.erase(*data_.rbegin());
+        largest_it = std::prev(data_.end());
     } else {
+        data_.insert(value);
+        size_t num_elements = data_.size();
+        size_t quantile_position = static_cast<size_t>(std::floor(alpha * (num_elements+1)));
+        auto current_quantile_position = std::distance(data_.begin(), quantile_it);
 
-        size_t n = data_.size();
-        size_t k = static_cast<size_t>(std::floor(alpha * n));
-        auto it_reverse = data_.rbegin();
-        hash_t threshold1_ = it_reverse->first;
-        if (k != 0) std::advance(it_reverse, k-1);
-        hash_t threshold2_ = it_reverse->first;
-
-        if (value > threshold1_) {
-            return;
-        } else if (value > threshold2_) {
-            Sketch::add(value);
-            data_.erase(data_.rbegin()->first);
-        } else {
-            Sketch::add(value);
-        }
+        if (current_quantile_position > quantile_position) {
+            --quantile_it;
+        } 
     }
+
+    
 }
 
 // Setter implementation, not expected to be used
@@ -51,7 +61,7 @@ void AlphaAffirmativeSketch::set(const std::vector<hash_t>& vec) {
 
 
 // Jaccard implementation
-double AlphaAffirmativeSketch::jaccard(const Sketch& other) const {
+double AlphaAffirmativeSketch::jaccard(const AlphaAffirmativeSketch& other) const {
     
     std::vector<hash_t> this_sketch = get();
     std::vector<hash_t> other_sketch = other.get();
@@ -107,4 +117,18 @@ double AlphaAffirmativeSketch::jaccard(const Sketch& other) const {
     double jaccard = static_cast<double>(intersection_set.size()) / union_set.size();
     return jaccard;
 
+}
+
+
+
+// Print implementation
+void AlphaAffirmativeSketch::print() const {
+    for (auto it = data_.begin(); it != data_.end(); it++) {
+        std::cout << *it << " ";
+    }
+    std::cout << std::endl;
+
+    // print the quantile and largest
+    std::cout << "Quantile: " << *quantile_it << std::endl;
+    std::cout << "Largest: " << *largest_it << std::endl;
 }

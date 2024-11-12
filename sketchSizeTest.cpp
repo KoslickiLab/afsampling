@@ -2,6 +2,17 @@
 # include <vector>
 # include <cstdlib>
 # include <string>
+# include <cmath>
+# include <chrono>
+# include <random>
+# include <algorithm>
+# include <set>
+# include <map>
+# include <cassert>
+# include <tuple>
+# include <cmath>
+# include <stdexcept>
+# include <string>
 
 # include "src/AffirmativeSketch.h"
 # include "mmh3/MurMurHash3.h"
@@ -75,6 +86,93 @@ void parse_arguments(int argc, char* argv[]) {
 }
 
 
+pair<double, double> get_mean_std_of_sketch_sizes_fmh(int set_size) {
+    
+    vector<int> sketch_sizes;
+    for (int i = 0; i < arguments.num_trials; i++) {
+        FracMinHashSketch sketch(arguments.scaled);
+
+        for (int j = 0; j < set_size; j++) {
+            sketch.add(mmh3(&j, sizeof(j), i));
+        }
+        sketch_sizes.push_back(sketch.get().size());
+    }
+
+    // calculate mean and standard deviation of the sketch sizes
+    double mean = 0;
+    for (int size : sketch_sizes) {
+        mean += size;
+    }
+    mean /= arguments.num_trials;
+    double std = 0;
+    for (int size : sketch_sizes) {
+        std += (size - mean) * (size - mean);
+    }
+    std /= arguments.num_trials;
+    std = sqrt(std);
+
+    return make_pair(mean, std);
+}
+
+
+pair<double, double> get_mean_std_of_sketch_sizes_as(int set_size) {
+    
+    vector<int> sketch_sizes;
+    for (int i = 0; i < arguments.num_trials; i++) {
+        AffirmativeSketch sketch(arguments.k);
+
+        for (int j = 0; j < set_size; j++) {
+            sketch.add(mmh3(&j, sizeof(j), i));
+        }
+        sketch_sizes.push_back(sketch.get().size());
+    }
+
+    // calculate mean and standard deviation of the sketch sizes
+    double mean = 0;
+    for (int size : sketch_sizes) {
+        mean += size;
+    }
+    mean /= arguments.num_trials;
+    double std = 0;
+    for (int size : sketch_sizes) {
+        std += (size - mean) * (size - mean);
+    }
+    std /= arguments.num_trials;
+    std = sqrt(std);
+
+    return make_pair(mean, std);
+}
+
+
+pair<double, double> get_mean_std_of_sketch_sizes_aas(int set_size) {
+    
+    vector<int> sketch_sizes;
+    for (int i = 0; i < arguments.num_trials; i++) {
+        AlphaAffirmativeSketch sketch(arguments.alpha);
+
+        for (int j = 0; j < set_size; j++) {
+            sketch.add(mmh3(&j, sizeof(j), i));
+        }
+        sketch_sizes.push_back(sketch.get().size());
+    }
+
+    // calculate mean and standard deviation of the sketch sizes
+    double mean = 0;
+    for (int size : sketch_sizes) {
+        mean += size;
+    }
+    mean /= arguments.num_trials;
+    double std = 0;
+    for (int size : sketch_sizes) {
+        std += (size - mean) * (size - mean);
+    }
+    std /= arguments.num_trials;
+    std = sqrt(std);
+
+    return make_pair(mean, std);
+}
+
+
 
 int main(int argc, char* argv[]) {
     
@@ -85,79 +183,51 @@ int main(int argc, char* argv[]) {
     cout << "k: " << arguments.k << endl;
     cout << "alpha: " << arguments.alpha << endl;
 
+    vector<double> fmh_sketch_sizes_mean;
+    vector<double> as_sketch_sizes_mean;
+    vector<double> aas_sketch_sizes_mean;
+
+    vector<double> fmh_sketch_sizes_std;
+    vector<double> as_sketch_sizes_std;
+    vector<double> aas_sketch_sizes_std;
+
+
     vector<int> sizes = {10000, 100000, 1000000, 10000000, 100000000};
     int max_size = 1000000000;
-    cout << "Sizes of the original sets considered: " << endl;
+    auto fmh_start = chrono::high_resolution_clock::now();
     for (int size : sizes) {
-        cout << size << " ";
+        auto [mean, std] = get_mean_std_of_sketch_sizes_fmh(size);
+        fmh_sketch_sizes_mean.push_back(mean);
+        fmh_sketch_sizes_std.push_back(std);
     }
-    cout << endl;
+    auto fmh_end = chrono::high_resolution_clock::now();
+    auto fmh_duration = chrono::duration_cast<chrono::milliseconds>(fmh_end - fmh_start);
+    cout << "FracMinHashSketch took " << fmh_duration.count() << " milliseconds" << endl;
 
+    auto as_start = chrono::high_resolution_clock::now();
     for (int size : sizes) {
-
-        vector<int> fmh_sketch_sizes;
-        vector<int> aff_sketch_sizes;
-        vector<int> alpha_aff_sketch_sizes;
-
-        for (int i = 0; i < arguments.num_trials; i++) {
-
-            // create a set of size 'size' randomly
-            vector<int> original_set;
-            for (int i = 0; i < size; i++) {
-                original_set.push_back( rand() % max_size );
-            }
-
-            // create sketches
-            FracMinHashSketch fmh_sketch(arguments.scaled);
-            AffirmativeSketch aff_sketch(arguments.k);
-            AlphaAffirmativeSketch alpha_aff_sketch(arguments.alpha);
-            
-            for (int value : original_set) {
-                auto hash_value = mmh3(&value, sizeof(value), 0);
-                fmh_sketch.add(hash_value);
-                aff_sketch.add(hash_value);
-                alpha_aff_sketch.add(hash_value);
-            }
-
-            fmh_sketch_sizes.push_back(fmh_sketch.get().size());
-            aff_sketch_sizes.push_back(aff_sketch.get().size());
-            alpha_aff_sketch_sizes.push_back(alpha_aff_sketch.get().size());
-
-        }
-
-        // print the average and std of the sizes of the sketches
-        double fmh_avg = 0;
-        double aff_avg = 0;
-        double alpha_aff_avg = 0;
-        for (int i = 0; i < arguments.num_trials; i++) {
-            fmh_avg += fmh_sketch_sizes[i];
-            aff_avg += aff_sketch_sizes[i];
-            alpha_aff_avg += alpha_aff_sketch_sizes[i];
-        }
-
-        fmh_avg /= arguments.num_trials;
-        aff_avg /= arguments.num_trials;
-        alpha_aff_avg /= arguments.num_trials;
-
-        double fmh_std = 0;
-        double aff_std = 0;
-        double alpha_aff_std = 0;
-
-        for (int i = 0; i < arguments.num_trials; i++) {
-            fmh_std += (fmh_sketch_sizes[i] - fmh_avg) * (fmh_sketch_sizes[i] - fmh_avg);
-            aff_std += (aff_sketch_sizes[i] - aff_avg) * (aff_sketch_sizes[i] - aff_avg);
-            alpha_aff_std += (alpha_aff_sketch_sizes[i] - alpha_aff_avg) * (alpha_aff_sketch_sizes[i] - alpha_aff_avg);
-        }
-
-        fmh_std = sqrt(fmh_std / arguments.num_trials);
-        aff_std = sqrt(aff_std / arguments.num_trials);
-        alpha_aff_std = sqrt(alpha_aff_std / arguments.num_trials);
-
-        cout << size << "," << fmh_avg << "," << fmh_std << "," << aff_avg << "," << aff_std << "," << alpha_aff_avg << "," << alpha_aff_std << endl;
-
-
+        auto [mean, std] = get_mean_std_of_sketch_sizes_as(size);
+        as_sketch_sizes_mean.push_back(mean);
+        as_sketch_sizes_std.push_back(std);
     }
+    auto as_end = chrono::high_resolution_clock::now();
+    auto as_duration = chrono::duration_cast<chrono::milliseconds>(as_end - as_start);
+    cout << "AffirmativeSketch took " << as_duration.count() << " milliseconds" << endl;
 
+    auto aas_start = chrono::high_resolution_clock::now();
+    for (int size : sizes) {
+        auto [mean, std] = get_mean_std_of_sketch_sizes_aas(size);
+        aas_sketch_sizes_mean.push_back(mean);
+        aas_sketch_sizes_std.push_back(std);
+    }
+    auto aas_end = chrono::high_resolution_clock::now();
+    auto aas_duration = chrono::duration_cast<chrono::milliseconds>(aas_end - aas_start);
+    cout << "AlphaAffirmativeSketch took " << aas_duration.count() << " milliseconds" << endl;
+
+    cout << "Size,FracMinHashSketchMean,FracMinHashSketchStd,AffirmativeSketchMean,AffirmativeSketchStd,AlphaAffirmativeSketchMean,AlphaAffirmativeSketchStd" << endl;
+    for (int i = 0; i < sizes.size(); i++) {
+        cout << sizes[i] << ',' << fmh_sketch_sizes_mean[i] << ',' << fmh_sketch_sizes_std[i] << ',' << as_sketch_sizes_mean[i] << ',' << as_sketch_sizes_std[i] << ',' << aas_sketch_sizes_mean[i] << ',' << aas_sketch_sizes_std[i] << endl;
+    }
 
     return 0;
 }
